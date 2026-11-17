@@ -12,5 +12,5 @@ Hosted on AWS: private S3 bucket behind CloudFront (Origin Access Control), ACM 
 
 ```bash
 aws s3 cp index.html s3://go-sports-skills-sh/index.html --content-type "text/html; charset=utf-8" --cache-control "public, max-age=300" --profile machina
-aws cloudfront create-invalidation --distribution-id <DISTRIBUTION_ID> --paths "/*" --profile machina
+aws cloudfront create-invalidation --distribution-id E34HXPZLTKORCP --paths "/*" --profile machina
 ```
