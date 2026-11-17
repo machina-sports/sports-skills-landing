@@ -290,10 +290,25 @@ footer{padding-block:60px 30px}
 .wordmark span{color:var(--orange);-webkit-text-stroke:0}
 .legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:rgba(242,238,227,.55)}
 
+/* ARQUIBANCADA: demo ao vivo embutida */
+.mag{background:var(--paper);color:var(--ink);padding-block:clamp(70px,8vw,120px);border-top:3px solid var(--ink)}
+.mag h2{font-size:clamp(60px,9.5vw,150px)}
+.mag h2 .outline{--sc:var(--ink);--stroke:3px}
+.mag-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(30px,4vw,64px);margin-top:clamp(30px,4vw,50px);align-items:start}
+.mag-lede{font-size:clamp(18px,1.6vw,22px);font-weight:500;max-width:44ch;margin:0 0 26px}
+.mag-steps{list-style:none;margin:0 0 26px;padding:0;border-top:3px solid var(--ink)}
+.mag-steps li{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid rgba(13,13,11,.18);font-size:15px}
+.mag-steps code{font-family:var(--mono);font-size:13px;font-weight:500;background:var(--ink);color:var(--volt);padding:3px 8px;border-radius:6px;justify-self:start;align-self:start}
+.mag-note{font-size:14px;color:rgba(13,13,11,.7);max-width:46ch;margin:0 0 20px}
+.mag-frame{background:#fff;border:3px solid var(--ink);box-shadow:var(--shadow);border-radius:18px;overflow:hidden}
+.mag-frame-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:var(--ink);color:var(--paper)}
+.mag-frame-top a{color:var(--volt);text-decoration:none}
+.mag-frame iframe{display:block;width:100%;height:640px;border:0;background:#fff}
+
 /* RESPONSIVE */
 @media (max-width:980px){
   .nav ul{display:none}
-  .kickoff-grid,.ask-grid,.media-grid,.pro-grid{grid-template-columns:minmax(0,1fr)}
+  .kickoff-grid,.ask-grid,.media-grid,.pro-grid,.mag-grid{grid-template-columns:minmax(0,1fr)}
   .agents{border-radius:28px 160px 160px 28px}
   .term{position:static}
   .cells{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -331,6 +346,7 @@ footer{padding-block:60px 30px}
       <li><a href="#roster">Skills</a></li>
       <li><a href="#ask">How it works</a></li>
       <li><a href="#media">For media</a></li>
+      <li><a href="#magazine">Try it</a></li>
       <li><a href="#pro">Machina Pro</a></li>
     </ul>
     <a class="btn btn-orange" href="#install">Install <span class="arrow">→</span></a>
@@ -465,6 +481,30 @@ footer{padding-block:60px 30px}
       <div><b>Read-only by default</b><p>The skills read data. They never place a bet or trade unless a person asks for that exact action.</p></div>
       <div><b>Sources on every answer</b><p>Agents attach source, freshness and liquidity caveats to scores, odds and news.</p></div>
       <div><b>No keys, no signup</b><p>Public data works out of the box. Install and ask your first question in under a minute.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="mag" id="magazine" aria-labelledby="mag-title">
+  <div class="wrap wrap-pad">
+    <span class="eyebrow">Live demo · Arquibancada</span>
+    <h2 id="mag-title" class="display" style="margin-top:14px">Your team.<br><span class="outline">On the cover.</span></h2>
+    <div class="mag-grid">
+      <div>
+        <p class="mag-lede"><b>Arquibancada</b> is a print magazine an agent writes from scratch. Pick a club and it reports, writes and lays out eight pages in the club's colours. About 90 seconds from pick to press.</p>
+        <ul class="mag-steps">
+          <li><code>football-data</code><span>Table, fixtures, last match stats, scorers and the run-in.</span></li>
+          <li><code>polymarket</code><span>What the markets price for the next games and the season.</span></li>
+          <li><code>sports-news</code><span>The latest headlines about the club.</span></li>
+          <li><code>fact-check</code><span>Every number in the copy is matched back to the collected data.</span></li>
+        </ul>
+        <p class="mag-note">13 football leagues. Demo editions are written in Brazilian Portuguese and limited to 20 per hour per network.</p>
+        <a class="btn btn-orange" href="https://arquibancada-nu.vercel.app" target="_blank" rel="noopener">Open full screen <span class="arrow">↗</span></a>
+      </div>
+      <div class="mag-frame">
+        <div class="mag-frame-top eyebrow"><span>Arquibancada · try it</span><a href="https://arquibancada-nu.vercel.app" target="_blank" rel="noopener">by Machina ↗</a></div>
+        <iframe id="magFrame" src="https://arquibancada-nu.vercel.app/?embed=1&amp;lang=en" title="Arquibancada: make a magazine for your team" loading="lazy"></iframe>
+      </div>
     </div>
   </div>
 </section>
@@ -624,6 +664,16 @@ footer{padding-block:60px 30px}
     const fallback=()=>{const code=btn.parentElement.querySelector('code');const r=document.createRange();r.selectNodeContents(code);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';setTimeout(()=>{btn.textContent='Copy';},1800);};
     try{navigator.clipboard.writeText(text).then(done,fallback);}catch(e){fallback();}
   }));
+})();
+
+// Arquibancada embutida: a página avisa a própria altura para o iframe crescer sem barra de rolagem.
+(function(){
+  var f=document.getElementById('magFrame');if(!f)return;
+  var origin=new URL(f.src).origin;
+  addEventListener('message',function(e){
+    if(e.origin!==origin||!e.data||e.data.arquibancada!=='height')return;
+    var h=+e.data.h;if(h>200&&h<5000)f.style.height=h+'px';
+  });
 })();
 </script>
 
